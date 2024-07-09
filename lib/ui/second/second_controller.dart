@@ -6,7 +6,7 @@ import 'second_service.dart';
 
 class SecondController {
 
-  final ValueNotifier<FetchState> state = ValueNotifier(FetchState());
+  ValueNotifier<FetchState> state = ValueNotifier(FetchState());
   final SecondService _service = serviceLocator.get();
 
   void fetchData() async {
@@ -21,9 +21,14 @@ class SecondController {
   }
 
   final SharedPreferences _prefs = serviceLocator.get();
-  final ValueNotifier<String> textInPrefs = ValueNotifier("");
+  ValueNotifier<String> textInPrefs = ValueNotifier("");
 
   void getTextInPrefs(){
     textInPrefs.value = _prefs.getString('name')!;
+  }
+
+  void dispose() {
+    state = ValueNotifier(FetchState());
+    textInPrefs = ValueNotifier("");
   }
 }
