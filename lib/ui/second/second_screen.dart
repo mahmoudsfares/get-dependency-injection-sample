@@ -11,18 +11,12 @@ class SecondScreen extends StatefulWidget {
 }
 
 class _SecondScreenState extends State<SecondScreen> {
-  final SecondController controller = serviceLocator.get();
+  final SecondController controller = serviceLocator<SecondController>();
 
   @override
-  void initState() {
-    super.initState();
-    controller.fetchData();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    controller.init();
   }
 
   @override
@@ -61,9 +55,16 @@ class _SecondScreenState extends State<SecondScreen> {
                 }
               },
             ),
+            ElevatedButton(onPressed: () => Navigator.pushNamed(context, '/second'), child: const Text('Open new screen')),
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }

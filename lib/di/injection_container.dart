@@ -11,6 +11,8 @@ Future<void> init() async {
   await sharedPreferences.setString('name', 'Batman');
   serviceLocator.registerLazySingleton(() => sharedPreferences);
 
+  // recalls same instance of the dependency
   serviceLocator.registerLazySingleton(() => SecondService());
-  serviceLocator.registerLazySingleton(() => SecondController());
+  // creates new one whenever the dependency was needed
+  serviceLocator.registerFactory(() => SecondController());
 }

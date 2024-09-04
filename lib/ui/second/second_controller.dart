@@ -9,7 +9,12 @@ class SecondController {
   ValueNotifier<FetchState> state = ValueNotifier(FetchState());
   final SecondService _service = serviceLocator.get();
 
-  void fetchData() async {
+  void init() {
+    print('controller: initialized');
+    _fetchData();
+  }
+
+  void _fetchData() async {
     state.value = Loading();
     try {
       Model data = await _service.fetchData();
@@ -30,5 +35,6 @@ class SecondController {
   void dispose() {
     state = ValueNotifier(FetchState());
     textInPrefs = ValueNotifier("");
+    print('controller: disposed');
   }
 }
