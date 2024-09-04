@@ -3,26 +3,41 @@ import 'package:get/get.dart';
 import 'package:get_di_sample/model/model.dart';
 import 'second_controller.dart';
 
-class SecondScreen extends GetView<SecondController> {
+class SecondScreen extends StatefulWidget {
+
+  const SecondScreen({super.key});
+
+  @override
+  State<SecondScreen> createState() => _SecondScreenState();
+}
+
+class _SecondScreenState extends State<SecondScreen> {
+  late final SecondController controller;
+  final String key = UniqueKey().toString();
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(SecondController(), tag: key);
+  }
 
   @override
   Widget build(BuildContext context) {
-    controller.fetchData();
-
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Obx(() {
-              FetchState state = controller.state.value;
-              if (controller.state.value is Loading) {
+            GetBuilder<SecondController>(
+                tag: key,
+                builder: (controller){
+              if (controller.state is Loading) {
                 return const CircularProgressIndicator();
-              } else if (controller.state.value is Error) {
-                String error = (state as Error).error.toString();
+              } else if (controller.state is Error) {
+                String error = (controller.state as Error).error.toString();
                 return Text(error);
-              } else if (controller.state.value is Fetched) {
-                String data = ((controller.state.value as Fetched).data as Model).title;
+              } else if (controller.state is Fetched) {
+                String data = ((controller.state as Fetched).data as Model).title;
                 return Text(data);
               } else {
                 return const SizedBox();
@@ -33,7 +48,9 @@ class SecondScreen extends GetView<SecondController> {
                 onPressed: controller.getTextInPrefs,
                 child: const Text('Click to see text in preferences')),
             const SizedBox(height: 8),
-            Obx(() {
+            GetBuilder<SecondController>(
+                tag: key,
+                builder: (controller) {
               String textInPrefs = controller.textInPrefs;
               if (textInPrefs.isEmpty) {
                 return const SizedBox();
@@ -41,6 +58,9 @@ class SecondScreen extends GetView<SecondController> {
                 return Text('Text in preferences is: $textInPrefs');
               }
             }),
+            ElevatedButton(
+                onPressed: () => Navigator.pushNamed(context, '/second'),
+                child: const Text('Create new screen')),
           ],
         ),
       ),

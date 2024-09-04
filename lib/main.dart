@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_di_sample/ui/home/home_binding.dart';
-import 'package:get_di_sample/ui/second/second_controller.dart';
 import 'package:get_di_sample/ui/second/second_screen.dart';
 import 'package:get_di_sample/ui/second/second_service.dart';
 import 'ui/home/home_screen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -24,11 +26,11 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/second',
-          page: () => SecondScreen(),
+          page: () => const SecondScreen(),
           // way #2: define dependencies building directly in a widget. both ways are fine.
           binding: BindingsBuilder(() {
-            // those will be destroyed if back is pressed in the second screen.
-            Get.lazyPut<SecondController>(() => SecondController());
+            // this will be destroyed if back is pressed in the second screen.
+            // if multiple dependent controllers are open, the service will be destroyed when all the instances are destroyed.
             Get.lazyPut<SecondService>(() => SecondService());
           }),
         ),
